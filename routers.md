@@ -1,0 +1,77 @@
+﻿Когда настраивал RIP у роутеров изначально указал адреса не сетей, которые они соединяют, 
+а порты маршрутизаторов, которые отвечают за эти сети. 
+Потом добавил в записи адреса уже самих сетей. 
+Поэтому в database лишние записи, но там всё хорошо :)
+
+
+Роутер 0
+
+
+Router#show ip rip database
+10.5.1.0/24    auto-summary
+10.5.1.0/24    directly connected, FastEthernet0/1
+192.168.1.0/24    auto-summary
+192.168.1.0/24    directly connected, FastEthernet1/0
+192.168.10.0/30    auto-summary
+192.168.10.0/30    directly connected, FastEthernet0/0
+
+
+Router#show ip interface brief
+Interface              IP-Address      OK? Method Status                Protocol 
+FastEthernet0/0        192.168.10.1    YES manual up                    up 
+FastEthernet0/1        10.5.1.1        YES manual up                    up 
+FastEthernet1/0        192.168.1.1     YES manual up                    up 
+Vlan1                  unassigned      YES unset  administratively down down
+
+
+Роутер 1
+
+
+Router#show ip rip database
+10.0.0.0/8    auto-summary
+10.0.0.0/8
+    [1] via 192.168.10.5, 00:00:24, FastEthernet0/1
+192.168.2.0/24    auto-summary
+192.168.2.0/24    directly connected, FastEthernet1/0
+192.168.3.0/24    auto-summary
+192.168.3.0/24
+    [1] via 192.168.10.5, 00:00:24, FastEthernet0/1
+192.168.10.0/30    auto-summary
+192.168.10.0/30    directly connected, FastEthernet0/0
+192.168.10.4/30    auto-summary
+192.168.10.4/30    directly connected, FastEthernet0/1
+
+
+Router#show ip interface brief
+Interface              IP-Address      OK? Method Status                Protocol 
+FastEthernet0/0        192.168.10.2    YES manual up                    up 
+FastEthernet0/1        192.168.10.6    YES manual up                    up 
+FastEthernet1/0        192.168.2.1     YES manual up                    up 
+Vlan1                  unassigned      YES unset  administratively down down
+
+
+
+Роутер 2
+
+
+Router#show ip rip database
+10.5.1.0/24 auto-summary
+10.5.1.0/24 directly connected, FastEthernet0/0
+192.168.2.0/24 auto-summary
+192.168.2.0/24
+[1] via 192.168.10.6, 00:00:09, FastEthernet0/1
+192.168.3.0/24 auto-summary
+192.168.3.0/24 directly connected, FastEthernet1/0
+192.168.10.0/30 auto-summary
+192.168.10.0/30
+[1] via 192.168.10.6, 00:00:09, FastEthernet0/1
+192.168.10.4/30 auto-summary
+192.168.10.4/30 directly connected, FastEthernet0/1
+
+
+Router#show ip interface brief 
+Interface              IP-Address      OK? Method Status                Protocol 
+FastEthernet0/0        10.5.1.2        YES manual up                    up 
+FastEthernet0/1        192.168.10.5    YES manual up                    up 
+FastEthernet1/0        192.168.3.1     YES manual up                    up 
+Vlan1                  unassigned      YES unset  administratively down down
